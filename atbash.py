@@ -18,7 +18,7 @@ def encode( string_to_encode ):
             code = code + atb[el]       
       return code 
 
-# no need for encode and decode for atbash. wrong this to show how to use map here
+# no need for encode and decode for atbash. wrote this to show how to use map here
 def decode( string_to_encode ):
       atb = atbash()
       def cnv(x): return atb[x]
