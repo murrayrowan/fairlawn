@@ -80,13 +80,10 @@ def checkCode( code ):
 
         if code == "WVXLWVSRTHSRXXNJGSFZWRGKPQYXRWOGFMRONNDJXAOANPRIRERLRXHQQERRSHJXZVHVIHSRUGOVUGULFI":
                result = True
-
         elif code == "HIGSHICCMQTHUADITPKJBCIDLTUNILMMWQCZLZMKIRIVIOICSJJVIIHSQ":
                result = True
-
         elif code == "YYIMPDQWZEPLGFXYEZHPQJEHIISMYVH":
                result = True
-
         elif code == "THEIMPERIALISTSHAVEBEENDEFEATED":
                result = "GAMEOVER"
         else:
@@ -111,8 +108,6 @@ def playTrack( mp3, location ):
         print track['title'] 
         sonos.pause()
         sonos.play()
-
-        return True
 
 if __name__ == '__main__':
 
