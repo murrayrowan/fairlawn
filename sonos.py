@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+import time
 from soco import SoCo
 
 def printSkull():
@@ -36,42 +37,85 @@ $$$$"""$$$$$$$$$$uuu   uu$$$$$$$$$"""$$$"
 
 def askForCode():
        guess = raw_input("Enter Secret Code: ")
-       print "you entered ", guess
-       sound = checkCode( guess )
-       if sound == False:
-                print "This is not a valid attack code. Please try again!"
-                return askForCode() 
+       result = checkCode( guess )
+
+       if result == "GAMEOVER":
+                endGame()
+       elif result == False:
+                attackSelf()
        else:
-	        return sound
+                attackEnemy()
+
+def attackSelf():
+       print "This is not a valid enemy attack code. The enemy has intercepted your attack and will now be able to attack you! Take cover for 3 minutes!"
+       mp3 = "https://s3.eu-west-2.amazonaws.com/fairlawnhackathon/failme.mp3" # FAIL MP3
+       playTrack(mp3, 'self')
+       time.sleep( 4 )
+       mp3 = "https://s3.eu-west-2.amazonaws.com/fairlawnhackathon/blasters.mp3" # BLASTERS MP3
+       playTrack(mp3, 'self')
+
+def attackEnemy():
+       print "Congratulations! This is a valid enemy attack code! You have broken their defenses and they will be attacked momentarily!"
+       mp3 = "https://s3.eu-west-2.amazonaws.com/fairlawnhackathon/yourfather.mp3" # FAIL MP3
+       playTrack(mp3, 'self')
+       time.sleep( 4 )
+       mp3 = "https://s3.eu-west-2.amazonaws.com/fairlawnhackathon/blasters.mp3" # Success MP3
+       playTrack(mp3, 'enemy')
+
+def endGame():
+       print "CONGRATULATIONS! YOU HAVE WON THE GAME AND DEFEATED YOUR ENEMY"
+
+       winners = "https://s3.eu-west-2.amazonaws.com/fairlawnhackathon/winners.mp3" # THEME TUNE
+       losers  = "https://s3.eu-west-2.amazonaws.com/fairlawnhackathon/losers.mp3" # THEME TUNE
+
+       mp3 = "https://s3.eu-west-2.amazonaws.com/fairlawnhackathon/withtheforce.mp3" # Success MP3
+       playTrack(mp3, 'self')
+       time.sleep( 4 )
+
+       playTrack( winners, 'self')
+       playTrack( losers, 'enemy' )
 
 def checkCode( code ):
-        if code == "code1":
-                mp3 = 'https://s3.eu-west-2.amazonaws.com/fairlawnhackathon/guns.mp3'
+        print "Code entered: ", code
 
-        elif code == "code2":
-                mp3 = 'https://s3.eu-west-2.amazonaws.com/fairlawnhackathon/bombs.mp3'
+        if code == "WVXLWVSRTHSRXXNJGSFZWRGKPQYXRWOGFMRONNDJXAOANPRIRERLRXHQQERRSHJXZVHVIHSRUGOVUGULFI":
+               result = True
 
-        elif code == "code3":
-                mp3 = 'https://s3.eu-west-2.amazonaws.com/fairlawnhackathon/explosion.mp3'
+        elif code == "HIGSHICCMQTHUADITPKJBCIDLTUNILMMWQCZLZMKIRIVIOICSJJVIIHSQ":
+               result = True
+
+        elif code == "YYIMPDQWZEPLGFXYEZHPQJEHIISMYVH":
+               result = True
+
+        elif code == "THEIMPERIALISTSHAVEBEENDEFEATED":
+               result = "GAMEOVER"
         else:
-                mp3 = False;
-        return mp3
+                result = False;
 
-def attackEnemy( weapon ):
- 
-        sonos = SoCo('192.168.0.43') # Pass in the IP of your Sonos speaker
-        sonos.play_uri( weapon )
+        return result
+
+def playTrack( mp3, location ):
+      
+        my_sonos     = '192.168.0.43' 
+        enemy_sonos  = '192.168.0.43'
+
+        if location == "self":
+               ip = my_sonos
+        else:
+               ip = enemy_sonos
+   
+        sonos = SoCo( ip ) # Sonos
+
+        sonos.play_uri( mp3 )
         track = sonos.get_current_track_info()
         print track['title'] 
         sonos.pause()
         sonos.play()
 
+        return True
+
 if __name__ == '__main__':
 
  print printSkull()
 
- mp3 = askForCode()
-
- attackEnemy( mp3 )
-
-
+ askForCode()
